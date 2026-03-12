@@ -1,31 +1,7 @@
 {
   "name": "动效插件",
-  "id": "com.example.animation-plugin-api",
-  "version": "1.1.0",
-  "description": "增强版动效插件 - 支持MasterGo API集成",
-  "author": "Developer",
-  "main": "api-integrated-plugin.html",
-  "permissions": [
-    "document",
-    "selection",
-    "ui"
-  ],
-  "features": [
-    {
-      "name": "API集成",
-      "description": "与MasterGo原生API深度集成"
-    },
-    {
-      "name": "智能元素识别",
-      "description": "自动识别选中设计元素"
-    },
-    {
-      "name": "实时代码生成",
-      "description": "根据选中元素生成对应代码"
-    },
-    {
-      "name": "调试日志",
-      "description": "详细的运行状态日志"
-    }
-  ]
+  "id": "com.example.hosted-animation",
+  "version": "1.3.0",
+  "main": "https://moonxing99.github.io/animation-plugin/index.html",
+  "permissions": ["document", "selection"]
 }
