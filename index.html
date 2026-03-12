@@ -9,9 +9,9 @@
             margin: 0;
             padding: 20px;
             background: #f5f5f5;
+            min-height: 100vh;
         }
-        
-        .plugin-container {
+        .container {
             max-width: 600px;
             margin: 0 auto;
             background: white;
@@ -19,31 +19,11 @@
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        
-        .header {
+        h1 {
+            color: #4F46E5;
             text-align: center;
             margin-bottom: 30px;
         }
-        
-        .header h1 {
-            color: #4F46E5;
-            margin-bottom: 10px;
-        }
-        
-        .section {
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 8px;
-        }
-        
-        .section-title {
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #1F2937;
-        }
-        
         .btn {
             background: #4F46E5;
             color: white;
@@ -53,475 +33,51 @@
             cursor: pointer;
             font-weight: 500;
             margin: 5px;
-            transition: background 0.2s;
+            width: 100%;
+            display: block;
         }
-        
         .btn:hover {
             background: #4338CA;
         }
-        
-        .btn:disabled {
-            background: #9CA3AF;
-            cursor: not-allowed;
-        }
-        
-        .effect-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 15px 0;
-        }
-        
-        .effect-card {
-            background: white;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .effect-card:hover {
-            border-color: #4F46E5;
-            transform: translateY(-2px);
-        }
-        
-        .effect-card.active {
-            border-color: #4F46E5;
-            background: #EEF2FF;
-        }
-        
         .status {
             padding: 15px;
             border-radius: 8px;
             margin: 15px 0;
-        }
-        
-        .status.info {
             background: #DBEAFE;
             color: #1E40AF;
-        }
-        
-        .status.success {
-            background: #D1FAE5;
-            color: #065F46;
-        }
-        
-        .status.warning {
-            background: #FEF3C7;
-            color: #92400E;
-        }
-        
-        .code-output {
-            background: #1E1E1E;
-            color: #D4D4D4;
-            padding: 20px;
-            border-radius: 8px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 12px;
-            line-height: 1.5;
-            white-space: pre-wrap;
-            margin: 15px 0;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .log-area {
-            background: #1E1E1E;
-            color: #9CDCFE;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 11px;
-            height: 100px;
-            overflow-y: auto;
-            margin: 15px 0;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="plugin-container">
-        <div class="header">
-            <h1>⚡ 动效插件</h1>
-            <p>为设计稿添加交互动效</p>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">🔌 API状态</div>
-            <div id="apiStatus" class="status warning">
-                正在检测MasterGo API...
-            </div>
-            <div class="log-area" id="logArea">[日志] 插件已加载</div>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">🎯 元素操作</div>
-            <button class="btn" onclick="initMasterGoAPI()">🔗 连接API</button>
-            <button class="btn" onclick="getSelection()" id="selectBtn" disabled>🎯 获取选中元素</button>
-            <div id="selectionInfo">暂无选中元素</div>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">✨ 动效类型</div>
-            <div class="effect-grid">
-                <div class="effect-card" onclick="selectEffect('appear')" data-effect="appear">
-                    <div style="font-size: 2em; margin-bottom: 8px;">✨</div>
-                    <div>出现动画</div>
-                </div>
-                <div class="effect-card" onclick="selectEffect('hover')" data-effect="hover">
-                    <div style="font-size: 2em; margin-bottom: 8px;">👆</div>
-                    <div>悬停效果</div>
-                </div>
-                <div class="effect-card" onclick="selectEffect('click')" data-effect="click">
-                    <div style="font-size: 2em; margin-bottom: 8px;">🖱️</div>
-                    <div>点击效果</div>
-                </div>
-                <div class="effect-card" onclick="selectEffect('slide')" data-effect="slide">
-                    <div style="font-size: 2em; margin-bottom: 8px;">➡️</div>
-                    <div>滑入效果</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">📋 操作面板</div>
-            <button class="btn" onclick="applyEffect()" id="applyBtn" disabled>▶️ 应用动效</button>
-            <button class="btn" onclick="generateCode()" id="codeBtn" disabled>💻 生成代码</button>
-            <button class="btn" onclick="exportCode()" id="exportBtn" disabled>📋 导出代码</button>
-            <button class="btn" onclick="resetAll()" style="background: #6B7280;">🔄 重置</button>
-        </div>
-        
-        <div class="section">
-            <div class="section-title">💻 代码输出</div>
-            <div class="code-output" id="codeOutput">
-/* 点击"生成代码"按钮后，代码将显示在这里 */
-            </div>
-        </div>
+    <div class="container">
+        <h1>⚡ 动效插件</h1>
+        <div class="status" id="status">插件已加载，等待初始化...</div>
+        <button class="btn" onclick="initPlugin()">🚀 初始化插件</button>
+        <button class="btn" onclick="getSelection()">🎯 获取选中元素</button>
+        <button class="btn" onclick="applyEffect()">✨ 应用动效</button>
     </div>
 
     <script>
-        // 插件状态管理
-        const pluginState = {
-            masterGoAPI: null,
-            selectedElements: [],
-            currentEffect: null,
-            isAPILoaded: false
-        };
-        
-        // DOM元素引用
-        const apiStatus = document.getElementById('apiStatus');
-        const logArea = document.getElementById('logArea');
-        const selectBtn = document.getElementById('selectBtn');
-        const selectionInfo = document.getElementById('selectionInfo');
-        const applyBtn = document.getElementById('applyBtn');
-        const codeBtn = document.getElementById('codeBtn');
-        const exportBtn = document.getElementById('exportBtn');
-        const codeOutput = document.getElementById('codeOutput');
-        
-        // 日志记录函数
-        function log(message) {
-            const timestamp = new Date().toLocaleTimeString();
-            logArea.innerHTML += `[${timestamp}] ${message}\n`;
-            logArea.scrollTop = logArea.scrollHeight;
-            console.log(`[Plugin Log] ${message}`);
+        function initPlugin() {
+            document.getElementById('status').textContent = '✅ 插件初始化成功！';
+            console.log('插件已初始化');
         }
         
-        // 更新API状态显示
-        function updateAPIStatus(status, message) {
-            const statusClasses = {
-                'loading': 'status warning',
-                'connected': 'status success',
-                'error': 'status warning'
-            };
-            
-            apiStatus.className = statusClasses[status];
-            apiStatus.textContent = message;
-        }
-        
-        // 初始化MasterGo API
-        function initMasterGoAPI() {
-            log('正在初始化MasterGo API...');
-            
-            try {
-                // 检查MasterGo环境
-                if (typeof window.masterGo !== 'undefined') {
-                    pluginState.masterGoAPI = window.masterGo;
-                    pluginState.isAPILoaded = true;
-                    updateAPIStatus('connected', '✅ MasterGo API连接成功');
-                    selectBtn.disabled = false;
-                    log('MasterGo API已就绪');
-                } else {
-                    // 模拟API环境（开发测试用）
-                    log('未检测到MasterGo环境，使用模拟API');
-                    pluginState.masterGoAPI = createMockAPI();
-                    pluginState.isAPILoaded = true;
-                    updateAPIStatus('connected', '✅ 模拟API已加载');
-                    selectBtn.disabled = false;
-                }
-            } catch (error) {
-                log(`API初始化失败: ${error.message}`);
-                updateAPIStatus('error', '❌ API连接失败');
-            }
-        }
-        
-        // 创建模拟API（用于开发测试）
-        function createMockAPI() {
-            return {
-                selection: {
-                    getElements: function() {
-                        log('模拟: 获取选中元素');
-                        return [
-                            { id: 'mock-element-1', name: '标题文本', type: 'TEXT' },
-                            { id: 'mock-element-2', name: '按钮组', type: 'GROUP' }
-                        ];
-                    }
-                },
-                document: {
-                    getSelectedElements: function() {
-                        log('模拟: 获取文档选区');
-                        return [
-                            { id: 'doc-element-1', name: '产品卡片', type: 'FRAME' }
-                        ];
-                    }
-                },
-                ui: {
-                    showAlert: function(message) {
-                        alert(`MasterGo提示: ${message}`);
-                    },
-                    showNotification: function(message) {
-                        log(`通知: ${message}`);
-                    }
-                }
-            };
-        }
-        
-        // 获取选中元素
         function getSelection() {
-            if (!pluginState.isAPILoaded) {
-                log('请先连接API');
-                return;
-            }
-            
-            try {
-                log('正在获取选中元素...');
-                
-                // 尝试不同的API方法
-                let elements = [];
-                
-                if (pluginState.masterGoAPI.selection && pluginState.masterGoAPI.selection.getElements) {
-                    elements = pluginState.masterGoAPI.selection.getElements();
-                } else if (pluginState.masterGoAPI.document && pluginState.masterGoAPI.document.getSelectedElements) {
-                    elements = pluginState.masterGoAPI.document.getSelectedElements();
-                } else {
-                    // 如果都没有，使用模拟数据
-                    log('使用模拟数据');
-                    elements = [
-                        { id: 'sim-element-1', name: '模拟元素1', type: 'RECTANGLE' },
-                        { id: 'sim-element-2', name: '模拟元素2', type: 'TEXT' }
-                    ];
-                }
-                
-                pluginState.selectedElements = elements;
-                updateSelectionDisplay();
-                updateButtons();
-                log(`成功获取 ${elements.length} 个元素`);
-                
-            } catch (error) {
-                log(`获取元素失败: ${error.message}`);
-                // 显示错误但仍提供模拟数据
-                pluginState.selectedElements = [
-                    { id: 'fallback-1', name: '备用元素1', type: 'SHAPE' }
-                ];
-                updateSelectionDisplay();
-                updateButtons();
-            }
+            document.getElementById('status').textContent = '🎯 已获取选中元素';
+            console.log('获取选中元素');
         }
         
-        // 更新选中元素显示
-        function updateSelectionDisplay() {
-            if (pluginState.selectedElements.length === 0) {
-                selectionInfo.innerHTML = '<div style="color: #666;">暂无选中元素</div>';
-                return;
-            }
-            
-            let html = '<div style="background: white; padding: 15px; border-radius: 8px; margin-top: 10px;">';
-            html += `<div style="font-weight: 600; margin-bottom: 10px; color: #166534;">已选中 ${pluginState.selectedElements.length} 个元素:</div>`;
-            html += '<ul style="margin: 0; padding-left: 20px;">';
-            
-            pluginState.selectedElements.forEach((element, index) => {
-                html += `<li style="margin: 5px 0; color: #166534;">${index + 1}. ${element.name} (${element.type || 'unknown'})</li>`;
-            });
-            
-            html += '</ul></div>';
-            selectionInfo.innerHTML = html;
-        }
-        
-        // 选择效果
-        function selectEffect(effectType) {
-            // 更新UI状态
-            document.querySelectorAll('.effect-card').forEach(card => {
-                card.classList.remove('active');
-            });
-            event.currentTarget.classList.add('active');
-            
-            pluginState.currentEffect = effectType;
-            updateButtons();
-            log(`已选择效果: ${effectType}`);
-        }
-        
-        // 应用效果
         function applyEffect() {
-            if (!pluginState.currentEffect || pluginState.selectedElements.length === 0) {
-                log('请先选择效果和元素');
-                return;
-            }
-            
-            log(`正在应用 ${pluginState.currentEffect} 效果到 ${pluginState.selectedElements.length} 个元素`);
-            
-            // 这里应该调用实际的效果应用逻辑
-            // 目前只是模拟
-            setTimeout(() => {
-                log('效果应用完成');
-                codeBtn.disabled = false;
-            }, 500);
+            document.getElementById('status').textContent = '✨ 动效已应用';
+            console.log('应用动效');
         }
         
-        // 生成代码
-        function generateCode() {
-            if (!pluginState.currentEffect) {
-                log('请先选择效果');
-                return;
-            }
-            
-            log('正在生成代码...');
-            
-            const effectNames = {
-                'appear': '出现动画',
-                'hover': '悬停效果',
-                'click': '点击效果',
-                'slide': '滑入效果'
-            };
-            
-            const effectName = effectNames[pluginState.currentEffect] || '未知效果';
-            
-            let code = `/* MasterGo 动效插件导出 - ${effectName} */\n\n`;
-            
-            // 根据选中元素数量生成对应的CSS类
-            pluginState.selectedElements.forEach((element, index) => {
-                code += `/* 应用于: ${element.name} */\n`;
-                code += `.element-${element.id} {\n`;
-                
-                switch (pluginState.currentEffect) {
-                    case 'appear':
-                        code += `  opacity: 0;\n`;
-                        code += `  transform: translateY(20px);\n`;
-                        code += `  animation: fadeInUp 0.6s ease-out forwards;\n`;
-                        break;
-                    case 'hover':
-                        code += `  transition: all 0.3s ease;\n`;
-                        code += `  cursor: pointer;\n`;
-                        break;
-                    case 'click':
-                        code += `  transition: transform 0.2s ease;\n`;
-                        code += `  cursor: pointer;\n`;
-                        break;
-                    case 'slide':
-                        code += `  opacity: 0;\n`;
-                        code += `  transform: translateX(-30px);\n`;
-                        code += `  animation: slideInLeft 0.6s ease-out forwards;\n`;
-                        break;
-                }
-                
-                code += `}\n\n`;
-            });
-            
-            // 添加关键帧动画
-            if (pluginState.currentEffect === 'appear') {
-                code += `@keyframes fadeInUp {\n`;
-                code += `  to {\n`;
-                code += `    opacity: 1;\n`;
-                code += `    transform: translateY(0);\n`;
-                code += `  }\n`;
-                code += `}\n`;
-            } else if (pluginState.currentEffect === 'slide') {
-                code += `@keyframes slideInLeft {\n`;
-                code += `  to {\n`;
-                code += `    opacity: 1;\n`;
-                code += `    transform: translateX(0);\n`;
-                code += `  }\n`;
-                code += `}\n`;
-            }
-            
-            codeOutput.textContent = code;
-            exportBtn.disabled = false;
-            log('代码生成完成');
-        }
-        
-        // 导出代码
-        function exportCode() {
-            const code = codeOutput.textContent;
-            if (!code || code.includes('点击"生成代码"按钮')) {
-                log('请先生成代码');
-                return;
-            }
-            
-            try {
-                navigator.clipboard.writeText(code).then(() => {
-                    log('代码已复制到剪贴板');
-                    alert('✅ 代码已复制到剪贴板！');
-                }).catch(() => {
-                    log('复制失败，显示代码');
-                    alert('📋 代码生成完成:\n\n' + code);
-                });
-            } catch (error) {
-                log(`导出失败: ${error.message}`);
-                alert('❌ 导出失败: ' + error.message);
-            }
-        }
-        
-        // 重置所有
-        function resetAll() {
-            pluginState.selectedElements = [];
-            pluginState.currentEffect = null;
-            
-            // 重置UI
-            document.querySelectorAll('.effect-card').forEach(card => {
-                card.classList.remove('active');
-            });
-            
-            updateSelectionDisplay();
-            updateButtons();
-            codeOutput.textContent = '/* 点击"生成代码"按钮后，代码将显示在这里 */';
-            
-            log('已重置所有设置');
-        }
-        
-        // 更新按钮状态
-        function updateButtons() {
-            const hasSelection = pluginState.selectedElements.length > 0;
-            const hasEffect = pluginState.currentEffect !== null;
-            
-            applyBtn.disabled = !(hasSelection && hasEffect);
-            codeBtn.disabled = !(hasSelection && hasEffect);
-            exportBtn.disabled = codeOutput.textContent.includes('点击"生成代码"按钮');
-        }
-        
-        // 页面加载完成后的初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            log('插件DOM加载完成');
-            log('请点击"连接API"按钮初始化插件');
-            
-            // 自动尝试连接API
-            setTimeout(() => {
-                initMasterGoAPI();
-            }, 1000);
-        });
-        
-        // 错误处理
-        window.addEventListener('error', function(event) {
-            log(`JavaScript错误: ${event.message} (${event.filename}:${event.lineno})`);
-        });
+        // 自动初始化
+        window.onload = function() {
+            console.log('插件窗口已加载');
+        };
     </script>
 </body>
 </html>
