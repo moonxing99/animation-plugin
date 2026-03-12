@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MasterGo 动效插件演示</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #4F46E5;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        
+        .demo-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1F2937;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .demo-item {
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .click-scale {
+            background: linear-gradient(135deg, #4F46E5, #818CF8);
+            color: white;
+        }
+        
+        .click-color {
+            background: linear-gradient(135deg, #10B981, #34D399);
+            color: white;
+        }
+        
+        .click-ripple {
+            background: linear-gradient(135deg, #F59E0B, #FBBF24);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hover-fade {
+            background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+            color: white;
+        }
+        
+        .carousel-demo {
+            background: linear-gradient(135deg, #EC4899, #F472B6);
+            color: white;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .instructions {
+            background: #EFF6FF;
+            border-left: 4px solid #4F46E5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #4F46E5;
+        }
+        
+        .instructions ul {
+            margin: 10px 0;
+        }
+        
+        .instructions li {
+            margin: 8px 0;
+            color: #374151;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🎨 MasterGo 动效插件演示</h1>
+        
+        <div class="instructions">
+            <h3>📋 使用说明</h3>
+            <ul>
+                <li>点击下方的不同效果区块体验各种交互效果</li>
+                <li>观察鼠标悬停和点击时的动画反馈</li>
+                <li>这些效果都可以在MasterGo插件中进行配置和导出</li>
+                <li>支持导出为CSS、JavaScript或完整HTML代码</li>
+            </ul>
+        </div>
+        
+        <div class="demo-section">
+            <div class="demo-title">🖱️ 点击效果演示</div>
+            <div class="demo-grid">
+                <div class="demo-item click-scale" id="scaleDemo">
+                    点击缩放效果
+                </div>
+                <div class="demo-item click-color" id="colorDemo">
+                    点击变色效果
+                </div>
+                <div class="demo-item click-ripple" id="rippleDemo">
+                    点击波纹效果
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <div class="demo-title">👆 悬停效果演示</div>
+            <div class="demo-grid">
+                <div class="demo-item hover-fade" id="hoverDemo">
+                    悬停淡入效果
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <div class="demo-title">🖼️ 轮播效果演示</div>
+            <div class="demo-grid">
+                <div class="demo-item carousel-demo" id="carouselDemo">
+                    轮播效果占位符
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 点击缩放效果
+        document.getElementById('scaleDemo').addEventListener('mousedown', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        
+        document.getElementById('scaleDemo').addEventListener('mouseup', function() {
+            this.style.transform = 'scale(1)';
+        });
+        
+        document.getElementById('scaleDemo').addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+        
+        // 点击变色效果
+        const colorDemo = document.getElementById('colorDemo');
+        const originalBg = getComputedStyle(colorDemo).background;
+        const originalColor = getComputedStyle(colorDemo).color;
+        
+        colorDemo.addEventListener('mousedown', function() {
+            this.style.background = 'linear-gradient(135deg, #059669, #10B981)';
+            this.style.color = '#F0FDF4';
+        });
+        
+        colorDemo.addEventListener('mouseup', function() {
+            this.style.background = originalBg;
+            this.style.color = originalColor;
+        });
+        
+        colorDemo.addEventListener('mouseleave', function() {
+            this.style.background = originalBg;
+            this.style.color = originalColor;
+        });
+        
+        // 点击波纹效果
+        document.getElementById('rippleDemo').addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.cssText = `
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.5);
+                transform: scale(0);
+                animation: ripple-animation 600ms linear;
+                pointer-events: none;
+                width: ${Math.max(this.offsetWidth, this.offsetHeight)}px;
+                height: ${Math.max(this.offsetWidth, this.offsetHeight)}px;
+                left: ${e.offsetX - Math.max(this.offsetWidth, this.offsetHeight)/2}px;
+                top: ${e.offsetY - Math.max(this.offsetWidth, this.offsetHeight)/2}px;
+            `;
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+        
+        // 添加波纹动画关键帧
+        if (!document.getElementById('ripple-keyframes')) {
+            const keyframes = document.createElement('style');
+            keyframes.id = 'ripple-keyframes';
+            keyframes.textContent = `
+                @keyframes ripple-animation {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(keyframes);
+        }
+        
+        // 悬停淡入效果
+        document.getElementById('hoverDemo').addEventListener('mouseenter', function() {
+            this.style.opacity = '0.8';
+            this.style.transform = 'scale(1.05)';
+        });
+        
+        document.getElementById('hoverDemo').addEventListener('mouseleave', function() {
+            this.style.opacity = '1';
+            this.style.transform = 'scale(1)';
+        });
+        
+        // 轮播效果演示
+        const carouselDemo = document.getElementById('carouselDemo');
+        let carouselIndex = 0;
+        const carouselItems = [
+            '轮播项目 1',
+            '轮播项目 2', 
+            '轮播项目 3'
+        ];
+        
+        setInterval(() => {
+            carouselIndex = (carouselIndex + 1) % carouselItems.length;
+            carouselDemo.textContent = carouselItems[carouselIndex];
+            carouselDemo.style.animation = 'fadeIn 0.5s ease-in-out';
+            
+            setTimeout(() => {
+                carouselDemo.style.animation = '';
+            }, 500);
+        }, 2000);
+        
+        // 添加淡入动画关键帧
+        if (!document.getElementById('fade-keyframes')) {
+            const fadeKeyframes = document.createElement('style');
+            fadeKeyframes.id = 'fade-keyframes';
+            fadeKeyframes.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(fadeKeyframes);
+        }
+    </script>
+</body>
+</html>

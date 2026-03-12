@@ -1,0 +1,12 @@
+{
+  "name": "动效插件",
+  "id": "com.example.animation-plugin",
+  "version": "1.0.0",
+  "description": "为MasterGo设计稿添加丰富的交互动效效果",
+  "author": "Developer",
+  "main": "src/index.html",
+  "permissions": [
+    "document",
+    "selection"
+  ]
+}

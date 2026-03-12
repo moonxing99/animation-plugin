@@ -1,0 +1,29 @@
+{
+  "name": "动效插件",
+  "id": "com.example.animation-final",
+  "version": "1.2.0",
+  "description": "MasterGo动效插件 - 支持丰富的交互动效",
+  "author": "Developer",
+  "main": "https://your-domain.com/plugins/animation-plugin/index.html",
+  "permissions": [
+    "document",
+    "selection",
+    "ui"
+  ],
+  "features": [
+    {
+      "name": "元素选择",
+      "description": "智能识别选中的设计元素"
+    },
+    {
+      "name": "效果应用",
+      "description": "多种交互动效效果"
+    },
+    {
+      "name": "代码导出",
+      "description": "生成可复用的动画代码"
+    }
+  ],
+  "categories": ["design", "animation"],
+  "minVersion": "1.0.0"
+}

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MasterGo 动效插件</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --light: #F9FAFB;
+            --dark: #1F2937;
+            --border: #E5E7EB;
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: white;
+            color: var(--dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .plugin-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), #818CF8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-item::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e5e7eb;
+        }
+
+        .status-bar {
+            padding: 15px 20px;
+            background: #DBEAFE;
+            color: #1E40AF;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            border-radius: var(--radius);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            animation: slideInRight 0.3s ease-out;
+            max-width: 300px;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .element-selector {
+            background: white;
+            border: 2px dashed var(--primary);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .element-selector:hover {
+            background: rgba(79, 70, 229, 0.05);
+            border-style: solid;
+        }
+
+        .element-selector.active {
+            background: rgba(79, 70, 229, 0.1);
+            border-style: solid;
+        }
+
+        .effect-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .effect-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .effect-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .effect-card.active {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .effect-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .effect-name {
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .preview-area {
+            background: #f8fafc;
+            border-radius: var(--radius);
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+
+        .code-output {
+            background: #1E1E1E;
+            color: #D4D4D4;
+            padding: 20px;
+            border-radius: var(--radius);
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            line-height: 1.5;
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 20px 0;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="plugin-container">
+        <div class="header">
+            <h1>⚡ 动效插件</h1>
+            <p>为MasterGo设计稿添加丰富的交互效果</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="section">
+                <h2 class="section-title">🎯 元素选择</h2>
+                <div class="element-selector" id="elementSelector" onclick="startSelection()">
+                    <div id="selectorContent">
+                        <div style="font-size: 3em; margin-bottom: 10px;">🖱️</div>
+                        <div>点击选择设计元素</div>
+                        <div style="font-size: 0.9em; opacity: 0.7; margin-top: 5px;">
+                            支持框选多个元素
+                        </div>
+                    </div>
+                </div>
+                <div id="selectedElements"></div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">✨ 效果设置</h2>
+                <div class="effect-grid">
+                    <div class="effect-card" onclick="selectEffect('appear')" data-effect="appear">
+                        <div class="effect-icon">✨</div>
+                        <div class="effect-name">出现动画</div>
+                    </div>
+                    <div class="effect-card" onclick="selectEffect('hover')" data-effect="hover">
+                        <div class="effect-icon">👆</div>
+                        <div class="effect-name">悬停效果</div>
+                    </div>
+                    <div class="effect-card" onclick="selectEffect('click')" data-effect="click">
+                        <div class="effect-icon">🖱️</div>
+                        <div class="effect-name">点击效果</div>
+                    </div>
+                    <div class="effect-card" onclick="selectEffect('slide')" data-effect="slide">
+                        <div class="effect-icon">➡️</div>
+                        <div class="effect-name">滑入效果</div>
+                    </div>
+                </div>
+                
+                <div class="control-panel">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500;">动画时长:</label>
+                        <input type="range" id="durationSlider" min="100" max="2000" value="600" 
+                               style="width: 100%;" oninput="updateDurationValue()">
+                        <div id="durationValue" style="text-align: center; margin-top: 5px; font-size: 0.9em;">
+                            600ms
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500;">缓动函数:</label>
+                        <select id="easingSelect" style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid var(--border);">
+                            <option value="ease-in-out">ease-in-out</option>
+                            <option value="ease-in">ease-in</option>
+                            <option value="ease-out">ease-out</option>
+                            <option value="linear">linear</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">👁️ 效果预览</h2>
+                <div class="preview-area" id="previewArea">
+                    <div>选择元素和效果后，预览将显示在这里</div>
+                </div>
+                
+                <div class="control-panel">
+                    <button class="btn btn-primary" onclick="applyEffect()" id="applyBtn" disabled>
+                        ▶️ 应用动效
+                    </button>
+                    <button class="btn btn-secondary" onclick="previewEffect()" id="previewBtn" disabled>
+                        👁️ 预览效果
+                    </button>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">📋 代码导出</h2>
+                <div class="code-output" id="codeOutput">
+/* 选择元素和效果后，代码将显示在这里 */
+                </div>
+                
+                <div class="control-panel">
+                    <button class="btn btn-primary" onclick="exportCode()" id="exportBtn" disabled>
+                        📋 复制代码
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetAll()">
+                        🔄 重置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar" id="statusBar">
+            <span>ℹ️</span>
+            <span>插件已就绪，请选择要添加动效的元素</span>
+        </div>
+    </div>
+
+    <div id="notifications"></div>
+
+    <script>
+        // 插件状态管理
+        const pluginState = {
+            selectedElements: [],
+            currentEffect: null,
+            isSelecting: false
+        };
+
+        // DOM元素引用
+        const elementSelector = document.getElementById('elementSelector');
+        const selectedElements = document.getElementById('selectedElements');
+        const previewArea = document.getElementById('previewArea');
+        const codeOutput = document.getElementById('codeOutput');
+        const durationSlider = document.getElementById('durationSlider');
+        const durationValue = document.getElementById('durationValue');
+        const easingSelect = document.getElementById('easingSelect');
+        const applyBtn = document.getElementById('applyBtn');
+        const previewBtn = document.getElementById('previewBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const statusBar = document.getElementById('statusBar');
+
+        // 更新时长显示
+        function updateDurationValue() {
+            durationValue.textContent = durationSlider.value + 'ms';
+        }
+
+        // 开始元素选择
+        function startSelection() {
+            pluginState.isSelecting = true;
+            updateStatus('请在MasterGo画布中选择元素', 'info');
+            showNotification('元素选择模式已启动，请在画布中选择元素');
+            
+            // 模拟元素选择（实际开发中需要调用MasterGo API）
+            setTimeout(() => {
+                simulateElementSelection();
+            }, 1000);
+        }
+
+        // 模拟元素选择（演示用）
+        function simulateElementSelection() {
+            pluginState.selectedElements = [
+                { id: 'element1', name: '标题文本', type: 'text' },
+                { id: 'element2', name: '按钮组', type: 'group' },
+                { id: 'element3', name: '产品卡片', type: 'frame' }
+            ];
+            
+            pluginState.isSelecting = false;
+            updateSelectedElementsDisplay();
+            updateButtons();
+            updateStatus(`已选择 ${pluginState.selectedElements.length} 个元素`, 'success');
+            showNotification(`成功选择 ${pluginState.selectedElements.length} 个元素`);
+        }
+
+        // 更新选中元素显示
+        function updateSelectedElementsDisplay() {
+            if (pluginState.selectedElements.length === 0) {
+                selectedElements.innerHTML = '<p style="color: #666; text-align: center; padding: 20px;">暂无选中元素</p>';
+                return;
+            }
+            
+            let html = '<div style="background: white; border-radius: 8px; padding: 15px; margin-top: 15px;">';
+            html += `<h3 style="margin: 0 0 10px 0; color: #166534;">已选中 ${pluginState.selectedElements.length} 个元素:</h3>`;
+            html += '<ul style="margin: 0; padding-left: 20px;">';
+            
+            pluginState.selectedElements.forEach((element, index) => {
+                html += `<li style="margin: 8px 0; color: #166534;">${index + 1}. ${element.name} (${element.type})</li>`;
+            });
+            
+            html += '</ul></div>';
+            selectedElements.innerHTML = html;
+        }
+
+        // 选择效果
+        function selectEffect(effectType) {
+            // 更新UI状态
+            document.querySelectorAll('.effect-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            pluginState.currentEffect = effectType;
+            updateButtons();
+            showNotification(`已选择 ${getEffectName(effectType)} 效果`);
+        }
+
+        // 获取效果名称
+        function getEffectName(effectType) {
+            const names = {
+                'appear': '出现动画',
+                'hover': '悬停效果',
+                'click': '点击效果',
+                'slide': '滑入效果'
+            };
+            return names[effectType] || '未知效果';
+        }
+
+        // 应用效果
+        function applyEffect() {
+            if (!pluginState.currentEffect || pluginState.selectedElements.length === 0) {
+                showNotification('请先选择效果和元素', 'warning');
+                return;
+            }
+            
+            const duration = durationSlider.value;
+            const easing = easingSelect.value;
+            
+            showNotification(`正在为 ${pluginState.selectedElements.length} 个元素应用 ${getEffectName(pluginState.currentEffect)} 效果`);
+            
+            // 模拟效果应用
+            setTimeout(() => {
+                updatePreview();
+                updateCodeOutput();
+                updateStatus('效果已应用，可以在预览区查看', 'success');
+                showNotification('效果应用成功！');
+            }, 500);
+        }
+
+        // 更新预览
+        function updatePreview() {
+            previewArea.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3em; margin-bottom: 15px;">🎉</div>
+                    <div style="font-size: 1.2em; font-weight: 500; margin-bottom: 10px;">
+                        ${getEffectName(pluginState.currentEffect)} 效果预览
+                    </div>
+                    <div style="color: #666; font-size: 0.9em;">
+                        已为 ${pluginState.selectedElements.length} 个元素应用效果
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background: white; border-radius: 8px;">
+                        <div style="display: flex; gap: 10px; justify-content: center;">
+                            <div style="width: 60px; height: 40px; background: #4F46E5; border-radius: 6px; animation: pulse 2s infinite;"></div>
+                            <div style="width: 60px; height: 40px; background: #10B981; border-radius: 6px; animation: pulse 2s infinite 0.2s;"></div>
+                            <div style="width: 60px; height: 40px; background: #F59E0B; border-radius: 6px; animation: pulse 2s infinite 0.4s;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 更新代码输出
+        function updateCodeOutput() {
+            const duration = durationSlider.value;
+            const easing = easingSelect.value;
+            const effectName = getEffectName(pluginState.currentEffect);
+            
+            let code = `/* MasterGo 动效插件导出 - ${effectName} */\n\n`;
+            
+            switch (pluginState.currentEffect) {
+                case 'appear':
+                    code += `.animated-element {\n`;
+                    code += `  opacity: 0;\n`;
+                    code += `  transform: translateY(20px);\n`;
+                    code += `  animation: fadeInUp ${duration}ms ${easing} forwards;\n`;
+                    code += `}\n\n`;
+                    code += `@keyframes fadeInUp {\n`;
+                    code += `  to {\n`;
+                    code += `    opacity: 1;\n`;
+                    code += `    transform: translateY(0);\n`;
+                    code += `  }\n`;
+                    code += `}`;
+                    break;
+                    
+                case 'hover':
+                    code += `.hover-effect {\n`;
+                    code += `  transition: all ${duration}ms ${easing};\n`;
+                    code += `  cursor: pointer;\n`;
+                    code += `}\n\n`;
+                    code += `.hover-effect:hover {\n`;
+                    code += `  transform: scale(1.05);\n`;
+                    code += `  box-shadow: 0 10px 25px rgba(0,0,0,0.15);\n`;
+                    code += `}`;
+                    break;
+                    
+                case 'click':
+                    code += `.click-effect {\n`;
+                    code += `  transition: transform ${Math.min(duration, 200)}ms ${easing};\n`;
+                    code += `  cursor: pointer;\n`;
+                    code += `}\n\n`;
+                    code += `.click-effect:active {\n`;
+                    code += `  transform: scale(0.95);\n`;
+                    code += `}`;
+                    break;
+                    
+                case 'slide':
+                    code += `.slide-effect {\n`;
+                    code += `  opacity: 0;\n`;
+                    code += `  transform: translateX(-30px);\n`;
+                    code += `  animation: slideInLeft ${duration}ms ${easing} forwards;\n`;
+                    code += `}\n\n`;
+                    code += `@keyframes slideInLeft {\n`;
+                    code += `  to {\n`;
+                    code += `    opacity: 1;\n`;
+                    code += `    transform: translateX(0);\n`;
+                    code += `  }\n`;
+                    code += `}`;
+                    break;
+            }
+            
+            codeOutput.textContent = code;
+        }
+
+        // 预览效果
+        function previewEffect() {
+            if (pluginState.selectedElements.length === 0) {
+                showNotification('没有可预览的元素', 'warning');
+                return;
+            }
+            
+            showNotification('开始效果预览...');
+            updatePreview();
+        }
+
+        // 导出代码
+        function exportCode() {
+            if (!pluginState.currentEffect || pluginState.selectedElements.length === 0) {
+                showNotification('没有可导出的代码', 'warning');
+                return;
+            }
+            
+            const code = codeOutput.textContent;
+            
+            // 复制到剪贴板
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification('代码已复制到剪贴板');
+            }).catch(() => {
+                showNotification('复制失败，请手动选择代码', 'error');
+            });
+        }
+
+        // 重置所有
+        function resetAll() {
+            pluginState.selectedElements = [];
+            pluginState.currentEffect = null;
+            pluginState.isSelecting = false;
+            
+            // 重置UI
+            document.querySelectorAll('.effect-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            updateSelectedElementsDisplay();
+            updateButtons();
+            updateStatus('插件已就绪，请选择要添加动效的元素', 'info');
+            previewArea.innerHTML = '<div>选择元素和效果后，预览将显示在这里</div>';
+            codeOutput.textContent = '/* 选择元素和效果后，代码将显示在这里 */';
+            
+            showNotification('已重置所有设置');
+        }
+
+        // 更新按钮状态
+        function updateButtons() {
+            const hasSelection = pluginState.selectedElements.length > 0;
+            const hasEffect = pluginState.currentEffect !== null;
+            
+            applyBtn.disabled = !(hasSelection && hasEffect);
+            previewBtn.disabled = !hasSelection;
+            exportBtn.disabled = !(hasSelection && hasEffect);
+        }
+
+        // 更新状态栏
+        function updateStatus(message, type = 'info') {
+            const icons = {
+                'info': 'ℹ️',
+                'warning': '⚠️',
+                'success': '✅',
+                'error': '❌'
+            };
+            
+            const colors = {
+                'info': '#1E40AF',
+                'warning': '#92400E',
+                'success': '#065F46',
+                'error': '#991B1B'
+            };
+            
+            const backgrounds = {
+                'info': '#DBEAFE',
+                'warning': '#FEF3C7',
+                'success': '#D1FAE5',
+                'error': '#FEE2E2'
+            };
+            
+            statusBar.innerHTML = `<span>${icons[type]}</span><span>${message}</span>`;
+            statusBar.style.color = colors[type];
+            statusBar.style.background = backgrounds[type];
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'success') {
+            const notifications = document.getElementById('notifications');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            const colors = {
+                'success': '#10B981',
+                'warning': '#F59E0B',
+                'error': '#EF4444',
+                'info': '#4F46E5'
+            };
+            
+            notification.style.borderLeftColor = colors[type];
+            
+            const icons = {
+                'success': '✅',
+                'warning': '⚠️',
+                'error': '❌',
+                'info': 'ℹ️'
+            };
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: flex-start; gap: 10px;">
+                    <span>${icons[type]}</span>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            notifications.appendChild(notification);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加动画关键帧
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { opacity: 0.6; transform: scale(1); }
+                50% { opacity: 1; transform: scale(1.05); }
+                100% { opacity: 0.6; transform: scale(1); }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 插件初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('MasterGo 动效插件已加载');
+            showNotification('欢迎使用 MasterGo 动效插件！');
+            updateButtons();
+        });
+    </script>
+</body>
+</html>

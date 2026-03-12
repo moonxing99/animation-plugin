@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MasterGo 动效插件 - 完整演示</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --secondary: #818CF8;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --light: #F9FAFB;
+            --dark: #1F2937;
+            --border: #E5E7EB;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        /* 头部 */
+        .demo-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .demo-subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* 演示区域布局 */
+        .demo-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            min-height: 600px;
+        }
+
+        /* 插件面板 */
+        .plugin-panel {
+            background: var(--light);
+            border-right: 1px solid var(--border);
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .panel-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        /* 效果选择器 */
+        .effect-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .effect-card {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .effect-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .effect-card.active {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.05);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .effect-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .effect-name {
+            font-weight: 500;
+            font-size: 0.9em;
+            color: var(--dark);
+        }
+
+        /* 参数控制 */
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95em;
+        }
+
+        .slider-control {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .value-display {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .select-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+        }
+
+        /* 预览区域 */
+        .preview-area {
+            padding: 30px;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .preview-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--dark);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light);
+            border-color: var(--primary);
+        }
+
+        /* 设计稿模拟 */
+        .design-canvas {
+            flex: 1;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            overflow: auto;
+            position: relative;
+        }
+
+        .canvas-title {
+            text-align: center;
+            font-size: 1.8em;
+            color: var(--dark);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .design-elements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .design-element {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            border-radius: var(--radius);
+            padding: 25px;
+            text-align: center;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .design-element::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .design-element:hover::before {
+            opacity: 1;
+        }
+
+        .element-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .element-name {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .element-desc {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* 通知系统 */
+        .notifications {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .notification {
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .demo-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .plugin-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .effect-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- 头部 -->
+        <header class="demo-header">
+            <h1 class="demo-title">🎨 MasterGo 动效插件</h1>
+            <p class="demo-subtitle">让设计稿动起来的强大工具</p>
+        </header>
+
+        <!-- 主要布局 -->
+        <div class="demo-layout">
+            <!-- 插件控制面板 -->
+            <div class="plugin-panel">
+                <div class="panel-section">
+                    <h3 class="section-title">🎯 效果选择</h3>
+                    <div class="effect-grid">
+                        <div class="effect-card active" data-effect="click">
+                            <div class="effect-icon">🖱️</div>
+                            <div class="effect-name">点击效果</div>
+                        </div>
+                        <div class="effect-card" data-effect="hover">
+                            <div class="effect-icon">👆</div>
+                            <div class="effect-name">悬停效果</div>
+                        </div>
+                        <div class="effect-card" data-effect="slide">
+                            <div class="effect-icon">➡️</div>
+                            <div class="effect-name">滑动效果</div>
+                        </div>
+                        <div class="effect-card" data-effect="bounce">
+                            <div class="effect-icon">🏀</div>
+                            <div class="effect-name">弹跳效果</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="section-title">⚙️ 参数设置</h3>
+                    
+                    <div class="control-group">
+                        <label class="control-label">动画时长</label>
+                        <input type="range" class="slider-control" id="duration" min="100" max="2000" value="300">
+                        <span class="value-display" id="duration-value">300ms</span>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">缓动函数</label>
+                        <select class="select-control" id="easing">
+                            <option value="ease-in-out">ease-in-out</option>
+                            <option value="ease-in">ease-in</option>
+                            <option value="ease-out">ease-out</option>
+                            <option value="linear">linear</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label class="control-label">
+                            <input type="checkbox" id="auto-preview" checked> 实时预览
+                        </label>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3 class="section-title">📤 导出选项</h3>
+                    <button class="control-btn btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="exportCode('css')">
+                        📋 导出CSS
+                    </button>
+                    <button class="control-btn btn-secondary" style="width: 100%;" onclick="exportCode('js')">
+                        💻 导出JavaScript
+                    </button>
+                </div>
+            </div>
+
+            <!-- 预览区域 -->
+            <div class="preview-area">
+                <div class="preview-header">
+                    <h2 class="preview-title">📱 设计稿预览</h2>
+                    <div class="preview-controls">
+                        <button class="control-btn btn-primary" onclick="applyEffect()">▶️ 应用效果</button>
+                        <button class="control-btn btn-secondary" onclick="resetCanvas()">🔄 重置</button>
+                    </div>
+                </div>
+                
+                <div class="design-canvas" id="designCanvas">
+                    <h3 class="canvas-title">网页设计稿示例</h3>
+                    <div class="design-elements">
+                        <div class="design-element" data-element="button">
+                            <span class="element-icon">🔘</span>
+                            <div class="element-name">主要按钮</div>
+                            <div class="element-desc">CTA按钮组件</div>
+                        </div>
+                        <div class="design-element" data-element="card">
+                            <span class="element-icon">🃏</span>
+                            <div class="element-name">产品卡片</div>
+                            <div class="element-desc">商品展示模块</div>
+                        </div>
+                        <div class="design-element" data-element="menu">
+                            <span class="element-icon">🍔</span>
+                            <div class="element-name">导航菜单</div>
+                            <div class="element-desc">网站导航栏</div>
+                        </div>
+                        <div class="design-element" data-element="image">
+                            <span class="element-icon">🖼️</span>
+                            <div class="element-name">特色图片</div>
+                            <div class="element-desc">横幅展示图</div>
+                        </div>
+                        <div class="design-element" data-element="form">
+                            <span class="element-icon">📝</span>
+                            <div class="element-name">表单元素</div>
+                            <div class="element-desc">输入框组件</div>
+                        </div>
+                        <div class="design-element" data-element="icon">
+                            <span class="element-icon">⭐</span>
+                            <div class="element-name">图标元素</div>
+                            <div class="element-desc">装饰性图标</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知区域 -->
+    <div class="notifications" id="notifications"></div>
+
+    <script>
+        // 当前状态
+        let currentEffect = 'click';
+        let effectsApplied = new Set();
+
+        // 效果实现
+        const effects = {
+            click: {
+                name: '点击效果',
+                apply: applyClickEffect,
+                elements: ['button', 'card']
+            },
+            hover: {
+                name: '悬停效果',
+                apply: applyHoverEffect,
+                elements: ['menu', 'card', 'icon']
+            },
+            slide: {
+                name: '滑动效果',
+                apply: applySlideEffect,
+                elements: ['card', 'image']
+            },
+            bounce: {
+                name: '弹跳效果',
+                apply: applyBounceEffect,
+                elements: ['button', 'icon']
+            }
+        };
+
+        // DOM元素引用
+        const durationSlider = document.getElementById('duration');
+        const durationValue = document.getElementById('duration-value');
+        const easingSelect = document.getElementById('easing');
+        const autoPreview = document.getElementById('auto-preview');
+        const designCanvas = document.getElementById('designCanvas');
+
+        // 更新时长显示
+        durationSlider.addEventListener('input', function() {
+            durationValue.textContent = this.value + 'ms';
+            if (autoPreview.checked && effectsApplied.size > 0) {
+                applyCurrentEffects();
+            }
+        });
+
+        // 效果卡片点击事件
+        document.querySelectorAll('.effect-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // 更新激活状态
+                document.querySelectorAll('.effect-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 更新当前效果
+                currentEffect = this.dataset.effect;
+                
+                // 如果启用了实时预览，立即应用效果
+                if (autoPreview.checked) {
+                    applyEffect();
+                }
+                
+                showNotification(`已选择 ${effects[currentEffect].name}`);
+            });
+        });
+
+        // 应用效果函数
+        function applyEffect() {
+            const effect = effects[currentEffect];
+            if (effect) {
+                effect.apply();
+                effectsApplied.add(currentEffect);
+                showNotification(`${effect.name} 已应用到设计稿`);
+            }
+        }
+
+        // 点击效果实现
+        function applyClickEffect() {
+            const elements = document.querySelectorAll('[data-element="button"], [data-element="card"]');
+            const duration = durationSlider.value + 'ms';
+            const easing = easingSelect.value;
+            
+            elements.forEach(element => {
+                // 清理之前的事件
+                if (element._clickHandlers) {
+                    element.removeEventListener('mousedown', element._clickHandlers.down);
+                    element.removeEventListener('mouseup', element._clickHandlers.up);
+                    element.removeEventListener('mouseleave', element._clickHandlers.leave);
+                }
+                
+                const handlers = {
+                    down: () => {
+                        element.style.transform = 'scale(0.95)';
+                    },
+                    up: () => {
+                        element.style.transform = 'scale(1)';
+                    },
+                    leave: () => {
+                        element.style.transform = 'scale(1)';
+                    }
+                };
+                
+                element.addEventListener('mousedown', handlers.down);
+                element.addEventListener('mouseup', handlers.up);
+                element.addEventListener('mouseleave', handlers.leave);
+                
+                element._clickHandlers = handlers;
+                element.style.transition = `transform ${duration} ${easing}`;
+                element.style.cursor = 'pointer';
+            });
+        }
+
+        // 悬停效果实现
+        function applyHoverEffect() {
+            const elements = document.querySelectorAll('[data-element="menu"], [data-element="card"], [data-element="icon"]');
+            const duration = durationSlider.value + 'ms';
+            const easing = easingSelect.value;
+            
+            elements.forEach(element => {
+                // 清理之前的事件
+                if (element._hoverHandlers) {
+                    element.removeEventListener('mouseenter', element._hoverHandlers.enter);
+                    element.removeEventListener('mouseleave', element._hoverHandlers.leave);
+                }
+                
+                const handlers = {
+                    enter: () => {
+                        if (element.dataset.element === 'menu') {
+                            element.style.background = 'linear-gradient(135deg, #a855f7, #c084fc)';
+                            element.style.transform = 'translateY(-5px)';
+                        } else if (element.dataset.element === 'card') {
+                            element.style.transform = 'scale(1.05)';
+                            element.style.boxShadow = '0 20px 40px rgba(0,0,0,0.2)';
+                        } else {
+                            element.style.transform = 'rotate(15deg) scale(1.2)';
+                        }
+                    },
+                    leave: () => {
+                        element.style.background = '';
+                        element.style.transform = '';
+                        element.style.boxShadow = '';
+                    }
+                };
+                
+                element.addEventListener('mouseenter', handlers.enter);
+                element.addEventListener('mouseleave', handlers.leave);
+                
+                element._hoverHandlers = handlers;
+                element.style.transition = `all ${duration} ${easing}`;
+                element.style.cursor = 'pointer';
+            });
+        }
+
+        // 滑动效果实现
+        function applySlideEffect() {
+            const elements = document.querySelectorAll('[data-element="card"], [data-element="image"]');
+            const duration = parseInt(durationSlider.value);
+            const easing = easingSelect.value;
+            
+            elements.forEach((element, index) => {
+                // 重置状态
+                element.style.opacity = '0';
+                element.style.transform = 'translateX(100px)';
+                
+                // 延迟执行
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateX(0)';
+                    element.style.transition = `all ${duration}ms ${easing}`;
+                }, index * 200);
+            });
+        }
+
+        // 弹跳效果实现
+        function applyBounceEffect() {
+            const elements = document.querySelectorAll('[data-element="button"], [data-element="icon"]');
+            const duration = parseInt(durationSlider.value);
+            
+            elements.forEach((element, index) => {
+                setTimeout(() => {
+                    element.animate([
+                        { transform: 'translateY(0)' },
+                        { transform: 'translateY(-20px)' },
+                        { transform: 'translateY(0)' },
+                        { transform: 'translateY(-10px)' },
+                        { transform: 'translateY(0)' }
+                    ], {
+                        duration: duration,
+                        easing: easingSelect.value
+                    });
+                }, index * 300);
+            });
+        }
+
+        // 应用当前所有效果
+        function applyCurrentEffects() {
+            effectsApplied.forEach(effectName => {
+                if (effects[effectName]) {
+                    effects[effectName].apply();
+                }
+            });
+        }
+
+        // 重置画布
+        function resetCanvas() {
+            // 移除所有效果
+            const allElements = document.querySelectorAll('[data-element]');
+            allElements.forEach(element => {
+                element.style.transform = '';
+                element.style.transition = '';
+                element.style.background = '';
+                element.style.boxShadow = '';
+                element.style.cursor = '';
+                element.style.opacity = '';
+                
+                // 清理事件监听器
+                if (element._clickHandlers) {
+                    element.removeEventListener('mousedown', element._clickHandlers.down);
+                    element.removeEventListener('mouseup', element._clickHandlers.up);
+                    element.removeEventListener('mouseleave', element._clickHandlers.leave);
+                    delete element._clickHandlers;
+                }
+                
+                if (element._hoverHandlers) {
+                    element.removeEventListener('mouseenter', element._hoverHandlers.enter);
+                    element.removeEventListener('mouseleave', element._hoverHandlers.leave);
+                    delete element._hoverHandlers;
+                }
+            });
+            
+            effectsApplied.clear();
+            showNotification('所有效果已重置');
+        }
+
+        // 导出代码
+        function exportCode(format) {
+            if (effectsApplied.size === 0) {
+                showNotification('请先应用至少一个效果');
+                return;
+            }
+            
+            let code = `/* MasterGo 动效插件导出 - ${format.toUpperCase()} 格式 */\n\n`;
+            
+            effectsApplied.forEach(effectName => {
+                const effect = effects[effectName];
+                code += `/* ${effect.name} */\n`;
+                code += generateCode(effectName, format);
+                code += '\n\n';
+            });
+            
+            // 复制到剪贴板
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification(`${format.toUpperCase()} 代码已复制到剪贴板`);
+            }).catch(() => {
+                showNotification('复制失败，请手动选择代码');
+                alert(code);
+            });
+        }
+
+        // 生成代码
+        function generateCode(effectName, format) {
+            const duration = durationSlider.value;
+            const easing = easingSelect.value;
+            
+            switch (effectName) {
+                case 'click':
+                    return format === 'css' ? 
+                        `.click-effect {\n  transition: transform ${duration}ms ${easing};\n  cursor: pointer;\n}\n\n.click-effect:active {\n  transform: scale(0.95);\n}` :
+                        `function applyClickEffect(elements) {\n  elements.forEach(element => {\n    element.addEventListener('mousedown', () => {\n      element.style.transform = 'scale(0.95)';\n    });\n    element.addEventListener('mouseup', () => {\n      element.style.transform = 'scale(1)';\n    });\n  });\n}`;
+                
+                case 'hover':
+                    return format === 'css' ?
+                        `.hover-effect {\n  transition: all ${duration}ms ${easing};\n  cursor: pointer;\n}\n\n.hover-effect:hover {\n  transform: scale(1.05);\n  box-shadow: 0 10px 25px rgba(0,0,0,0.15);\n}` :
+                        `function applyHoverEffect(elements) {\n  elements.forEach(element => {\n    element.addEventListener('mouseenter', () => {\n      element.style.transform = 'scale(1.05)';\n    });\n    element.addEventListener('mouseleave', () => {\n      element.style.transform = 'scale(1)';\n    });\n  });\n}`;
+                
+                default:
+                    return `/* ${effectName} 效果代码 */`;
+            }
+        }
+
+        // 显示通知
+        function showNotification(message) {
+            const notifications = document.getElementById('notifications');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            
+            notifications.appendChild(notification);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            showNotification('欢迎使用 MasterGo 动效插件！');
+            
+            // 2秒后自动应用点击效果作为演示
+            setTimeout(() => {
+                applyClickEffect();
+                effectsApplied.add('click');
+                document.querySelector('[data-effect="click"]').classList.add('active');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

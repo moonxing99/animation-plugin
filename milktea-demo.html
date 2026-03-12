@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奶茶配方展示网站 - 动效演示</title>
+    <style>
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #FFF8F0 0%, #FFE4B5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 页面容器 */
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* 头部区域 */
+        .header {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* 导航栏 */
+        .nav {
+            background: #FFF8F0;
+            padding: 0 40px;
+            border-bottom: 1px solid #FFE4B5;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-item {
+            padding: 20px 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #8B4513;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: #8B4513;
+            color: white;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            padding: 40px;
+        }
+
+        /* 产品展示区 */
+        .product-showcase {
+            background: #FFF8F0;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .product-title {
+            font-size: 1.8em;
+            color: #8B4513;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #FFB6C1, #FF69B4);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #8B4513;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            color: #FF6B6B;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* 配方介绍区 */
+        .recipe-section {
+            background: #FFF8F0;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .recipe-title {
+            font-size: 1.8em;
+            color: #8B4513;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .ingredient-list {
+            list-style: none;
+        }
+
+        .ingredient-item {
+            background: white;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .ingredient-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .ingredient-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #FFB6C1, #FF69B4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .ingredient-name {
+            flex: 1;
+            font-weight: 500;
+            color: #8B4513;
+        }
+
+        .ingredient-amount {
+            background: #8B4513;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        /* 特色服务区 */
+        .features {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.3em;
+            color: #8B4513;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 控制面板 */
+        .control-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1000;
+            max-width: 300px;
+        }
+
+        .panel-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #8B4513;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .effect-selector {
+            margin-bottom: 20px;
+        }
+
+        .effect-option {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #FFF8F0;
+            border: 2px solid #FFE4B5;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .effect-option:hover {
+            border-color: #8B4513;
+            background: #FFE4B5;
+        }
+
+        .effect-option.active {
+            border-color: #8B4513;
+            background: #8B4513;
+            color: white;
+        }
+
+        .demo-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #8B4513, #D2691E);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.3);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-panel {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin: 20px;
+                max-width: none;
+            }
+        }
+
+        /* 动画关键帧 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* 应用动画的类 */
+        .animated {
+            animation-duration: 0.6s;
+            animation-fill-mode: both;
+        }
+
+        .fade-in-up { animation-name: fadeInUp; }
+        .bounce-in { animation-name: bounceIn; }
+        .pulse { animation-name: pulse; }
+        .slide-in-left { animation-name: slideInLeft; }
+        .slide-in-right { animation-name: slideInRight; }
+    </style>
+</head>
+<body>
+    <!-- 控制面板 -->
+    <div class="control-panel">
+        <div class="panel-title">🎮 动效控制器</div>
+        
+        <div class="effect-selector">
+            <div class="effect-option active" data-effect="click-scale">🖱️ 点击缩放</div>
+            <div class="effect-option" data-effect="hover-highlight">👆 悬停高亮</div>
+            <div class="effect-option" data-effect="slide-in">➡️ 滑入效果</div>
+            <div class="effect-option" data-effect="bounce">🏀 弹跳效果</div>
+        </div>
+        
+        <button class="demo-button" onclick="applyAllEffects()">🎯 应用所有效果</button>
+        <button class="demo-button" onclick="resetEffects()" style="background: #6c757d; margin-top: 8px;">🔄 重置效果</button>
+    </div>
+
+    <!-- 页面容器 -->
+    <div class="page-container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1 class="logo animated fade-in-up">🥤 奶茶小铺</h1>
+            <p class="tagline animated fade-in-up" style="animation-delay: 0.2s;">每一杯都是用心调制的温暖</p>
+        </header>
+
+        <!-- 导航 -->
+        <nav class="nav">
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" class="nav-link animated slide-in-left" style="animation-delay: 0.4s;">首页</a></li>
+                <li class="nav-item"><a href="#" class="nav-link animated slide-in-left" style="animation-delay: 0.5s;">菜单</a></li>
+                <li class="nav-item"><a href="#" class="nav-link animated slide-in-left" style="animation-delay: 0.6s;">关于我们</a></li>
+                <li class="nav-item"><a href="#" class="nav-link animated slide-in-left" style="animation-delay: 0.7s;">联系我们</a></li>
+            </ul>
+        </nav>
+
+        <!-- 主要内容 -->
+        <div class="main-content">
+            <!-- 产品展示 -->
+            <div class="product-showcase">
+                <h2 class="product-title animated fade-in-up" style="animation-delay: 0.8s;">🌟 热门推荐</h2>
+                <div class="product-grid">
+                    <div class="product-card animated bounce-in" style="animation-delay: 1s;" data-element="product">
+                        <div class="product-image">🧋</div>
+                        <div class="product-name">珍珠奶茶</div>
+                        <div class="product-price">¥18</div>
+                    </div>
+                    <div class="product-card animated bounce-in" style="animation-delay: 1.2s;" data-element="product">
+                        <div class="product-image">☕</div>
+                        <div class="product-name">焦糖玛奇朵</div>
+                        <div class="product-price">¥22</div>
+                    </div>
+                    <div class="product-card animated bounce-in" style="animation-delay: 1.4s;" data-element="product">
+                        <div class="product-image">🍵</div>
+                        <div class="product-name">茉香绿茶</div>
+                        <div class="product-price">¥16</div>
+                    </div>
+                    <div class="product-card animated bounce-in" style="animation-delay: 1.6s;" data-element="product">
+                        <div class="product-image">🍓</div>
+                        <div class="product-name">草莓奶昔</div>
+                        <div class="product-price">¥25</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 配方介绍 -->
+            <div class="recipe-section">
+                <h2 class="recipe-title animated fade-in-up" style="animation-delay: 1.8s;">📝 精选配方</h2>
+                <ul class="ingredient-list">
+                    <li class="ingredient-item animated slide-in-right" style="animation-delay: 2s;" data-element="ingredient">
+                        <div class="ingredient-icon">🥛</div>
+                        <div class="ingredient-name">新鲜牛奶</div>
+                        <div class="ingredient-amount">200ml</div>
+                    </li>
+                    <li class="ingredient-item animated slide-in-right" style="animation-delay: 2.2s;" data-element="ingredient">
+                        <div class="ingredient-icon">茶叶</div>
+                        <div class="ingredient-name">优质红茶</div>
+                        <div class="ingredient-amount">5g</div>
+                    </li>
+                    <li class="ingredient-item animated slide-in-right" style="animation-delay: 2.4s;" data-element="ingredient">
+                        <div class="ingredient-icon">🍯</div>
+                        <div class="ingredient-name">天然蜂蜜</div>
+                        <div class="ingredient-amount">适量</div>
+                    </li>
+                    <li class="ingredient-item animated slide-in-right" style="animation-delay: 2.6s;" data-element="ingredient">
+                        <div class="ingredient-icon"> tapioca</div>
+                        <div class="ingredient-name">Q弹珍珠</div>
+                        <div class="ingredient-amount">50g</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 特色服务 -->
+            <div class="features">
+                <div class="feature-card animated bounce-in" style="animation-delay: 2.8s;" data-element="feature">
+                    <div class="feature-icon">🚚</div>
+                    <div class="feature-title">快速配送</div>
+                    <div class="feature-desc">30分钟内送达，保证温度和口感</div>
+                </div>
+                <div class="feature-card animated bounce-in" style="animation-delay: 3s;" data-element="feature">
+                    <div class="feature-icon">🌱</div>
+                    <div class="feature-title">健康原料</div>
+                    <div class="feature-desc">选用天然食材，无添加防腐剂</div>
+                </div>
+                <div class="feature-card animated bounce-in" style="animation-delay: 3.2s;" data-element="feature">
+                    <div class="feature-icon">💝</div>
+                    <div class="feature-title">贴心服务</div>
+                    <div class="feature-desc">可根据个人喜好定制口味</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 当前激活的效果
+        let currentEffect = 'click-scale';
+        let effectsApplied = false;
+
+        // 效果配置
+        const effectConfigs = {
+            'click-scale': {
+                name: '点击缩放',
+                apply: applyClickScale,
+                elements: ['product-card', 'feature-card']
+            },
+            'hover-highlight': {
+                name: '悬停高亮',
+                apply: applyHoverHighlight,
+                elements: ['nav-link', 'ingredient-item']
+            },
+            'slide-in': {
+                name: '滑入效果',
+                apply: applySlideIn,
+                elements: ['product-card', 'ingredient-item']
+            },
+            'bounce': {
+                name: '弹跳效果',
+                apply: applyBounce,
+                elements: ['feature-card']
+            }
+        };
+
+        // 点击缩放效果
+        function applyClickScale() {
+            const elements = document.querySelectorAll('[data-element="product"], [data-element="feature"]');
+            elements.forEach(element => {
+                // 移除之前的事件监听器
+                if (element._scaleHandlers) {
+                    element.removeEventListener('mousedown', element._scaleHandlers.down);
+                    element.removeEventListener('mouseup', element._scaleHandlers.up);
+                    element.removeEventListener('mouseleave', element._scaleHandlers.leave);
+                }
+
+                const handlers = {
+                    down: () => {
+                        element.style.transform = 'scale(0.95)';
+                        element.style.transition = 'transform 0.1s ease';
+                    },
+                    up: () => {
+                        element.style.transform = 'scale(1)';
+                    },
+                    leave: () => {
+                        element.style.transform = 'scale(1)';
+                    }
+                };
+
+                element.addEventListener('mousedown', handlers.down);
+                element.addEventListener('mouseup', handlers.up);
+                element.addEventListener('mouseleave', handlers.leave);
+                
+                element._scaleHandlers = handlers;
+                element.style.cursor = 'pointer';
+            });
+        }
+
+        // 悬停高亮效果
+        function applyHoverHighlight() {
+            const elements = document.querySelectorAll('.nav-link, [data-element="ingredient"]');
+            elements.forEach(element => {
+                // 移除之前的事件监听器
+                if (element._hoverHandlers) {
+                    element.removeEventListener('mouseenter', element._hoverHandlers.enter);
+                    element.removeEventListener('mouseleave', element._hoverHandlers.leave);
+                }
+
+                const handlers = {
+                    enter: () => {
+                        if (element.classList.contains('nav-link')) {
+                            element.style.background = '#8B4513';
+                            element.style.color = 'white';
+                            element.style.transform = 'translateY(-2px)';
+                        } else {
+                            element.style.background = '#FFF0F5';
+                            element.style.transform = 'translateX(15px)';
+                            element.style.boxShadow = '0 8px 20px rgba(0,0,0,0.15)';
+                        }
+                        element.style.transition = 'all 0.3s ease';
+                    },
+                    leave: () => {
+                        if (element.classList.contains('nav-link')) {
+                            element.style.background = '#FFF8F0';
+                            element.style.color = '#8B4513';
+                            element.style.transform = 'translateY(0)';
+                        } else {
+                            element.style.background = 'white';
+                            element.style.transform = 'translateX(0)';
+                            element.style.boxShadow = '0 3px 10px rgba(0,0,0,0.05)';
+                        }
+                    }
+                };
+
+                element.addEventListener('mouseenter', handlers.enter);
+                element.addEventListener('mouseleave', handlers.leave);
+                
+                element._hoverHandlers = handlers;
+                element.style.cursor = 'pointer';
+            });
+        }
+
+        // 滑入效果
+        function applySlideIn() {
+            const elements = document.querySelectorAll('[data-element="product"], [data-element="ingredient"]');
+            elements.forEach((element, index) => {
+                // 重置元素状态
+                element.style.opacity = '0';
+                element.style.transform = 'translateX(50px)';
+                
+                // 延迟执行动画
+                setTimeout(() => {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateX(0)';
+                    element.style.transition = 'all 0.6s ease-out';
+                }, index * 200);
+            });
+        }
+
+        // 弹跳效果
+        function applyBounce() {
+            const elements = document.querySelectorAll('[data-element="feature"]');
+            elements.forEach((element, index) => {
+                // 添加弹跳动画类
+                setTimeout(() => {
+                    element.style.animation = 'bounceIn 0.8s ease-out';
+                }, index * 300);
+            });
+        }
+
+        // 重置所有效果
+        function resetEffects() {
+            // 移除所有动画类
+            const animatedElements = document.querySelectorAll('.animated');
+            animatedElements.forEach(element => {
+                element.classList.remove('fade-in-up', 'bounce-in', 'slide-in-left', 'slide-in-right');
+            });
+
+            // 重置所有元素的样式
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(element => {
+                element.style.transform = '';
+                element.style.transition = '';
+                element.style.animation = '';
+                element.style.background = '';
+                element.style.color = '';
+                element.style.boxShadow = '';
+                element.style.cursor = '';
+                
+                // 移除事件监听器
+                if (element._scaleHandlers) {
+                    element.removeEventListener('mousedown', element._scaleHandlers.down);
+                    element.removeEventListener('mouseup', element._scaleHandlers.up);
+                    element.removeEventListener('mouseleave', element._scaleHandlers.leave);
+                    delete element._scaleHandlers;
+                }
+                
+                if (element._hoverHandlers) {
+                    element.removeEventListener('mouseenter', element._hoverHandlers.enter);
+                    element.removeEventListener('mouseleave', element._hoverHandlers.leave);
+                    delete element._hoverHandlers;
+                }
+            });
+
+            // 重新添加初始动画
+            setTimeout(() => {
+                document.querySelector('.logo').classList.add('animated', 'fade-in-up');
+                document.querySelector('.tagline').classList.add('animated', 'fade-in-up');
+                document.querySelectorAll('.nav-link').forEach((link, index) => {
+                    link.classList.add('animated', 'slide-in-left');
+                    link.style.animationDelay = (0.4 + index * 0.1) + 's';
+                });
+            }, 100);
+
+            effectsApplied = false;
+            updateActiveButton();
+        }
+
+        // 应用所有效果
+        function applyAllEffects() {
+            if (effectsApplied) {
+                resetEffects();
+                return;
+            }
+
+            // 应用当前选中的效果
+            const config = effectConfigs[currentEffect];
+            if (config) {
+                config.apply();
+            }
+
+            effectsApplied = true;
+            updateActiveButton();
+        }
+
+        // 更新按钮文本
+        function updateActiveButton() {
+            const button = document.querySelector('.demo-button');
+            button.textContent = effectsApplied ? '🔄 重置效果' : '🎯 应用所有效果';
+        }
+
+        // 效果选择器事件
+        document.querySelectorAll('.effect-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // 移除其他选项的active状态
+                document.querySelectorAll('.effect-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                
+                // 添加当前选项的active状态
+                this.classList.add('active');
+                
+                // 更新当前效果
+                currentEffect = this.dataset.effect;
+            });
+        });
+
+        // 页面加载完成后自动应用一些基础动画
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                applyClickScale();
+                applyHoverHighlight();
+            }, 3500);
+        });
+    </script>
+</body>
+</html>
