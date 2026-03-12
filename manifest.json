@@ -1,41 +1,31 @@
 {
   "name": "动效插件",
-  "id": "animation-effects-plugin",
-  "version": "1.0.0",
-  "description": "为MasterGo设计稿添加丰富的交互动效效果",
-  "author": "Your Name",
-  "homepage": "https://your-website.com",
-  "icon": "icon.png",
-  "main": "index.html",
+  "id": "com.example.animation-plugin-api",
+  "version": "1.1.0",
+  "description": "增强版动效插件 - 支持MasterGo API集成",
+  "author": "Developer",
+  "main": "api-integrated-plugin.html",
   "permissions": [
-    "read-selection",
-    "modify-selection",
-    "access-document"
+    "document",
+    "selection",
+    "ui"
   ],
   "features": [
     {
-      "name": "画框选择",
-      "description": "拖拽选择设计稿中的画框区域"
+      "name": "API集成",
+      "description": "与MasterGo原生API深度集成"
     },
     {
-      "name": "元素识别",
-      "description": "自动识别选框内的设计元素"
+      "name": "智能元素识别",
+      "description": "自动识别选中设计元素"
     },
     {
-      "name": "动效应用",
-      "description": "为选中元素添加多种交互效果"
+      "name": "实时代码生成",
+      "description": "根据选中元素生成对应代码"
     },
     {
-      "name": "实时预览",
-      "description": "在设计稿中直接预览动效效果"
-    },
-    {
-      "name": "代码导出",
-      "description": "导出CSS/JS动画代码供开发使用"
+      "name": "调试日志",
+      "description": "详细的运行状态日志"
     }
-  ],
-  "categories": ["design", "animation", "utilities"],
-  "tags": ["动效", "动画", "交互", "设计工具"],
-  "minVersion": "1.0.0",
-  "maxVersion": "2.0.0"
+  ]
 }
