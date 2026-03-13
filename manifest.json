@@ -1,7 +1,12 @@
 {
   "name": "动效插件",
-  "id": "com.example.hosted-animation",
-  "version": "1.3.0",
-  "main": "https://moonxing99.github.io/animation-plugin/index.html",
-  "permissions": ["document", "selection"]
+  "id": "animation-effects-plugin",
+  "version": "1.0.0",
+  "description": "为MasterGo设计稿添加丰富的交互动效效果",
+  "author": "Developer",
+  "main": "index.html",
+  "permissions": [
+    "document",
+    "selection"
+  ]
 }

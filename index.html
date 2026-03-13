@@ -1,83 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>动效插件</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
+            padding: 16px;
             background: #f5f5f5;
-            min-height: 100vh;
         }
         .container {
-            max-width: 600px;
-            margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 20px;
         }
         h1 {
-            color: #4F46E5;
-            text-align: center;
-            margin-bottom: 30px;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 16px;
         }
         .btn {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 8px;
             background: #4F46E5;
             color: white;
             border: none;
-            padding: 12px 24px;
             border-radius: 6px;
             cursor: pointer;
-            font-weight: 500;
-            margin: 5px;
-            width: 100%;
-            display: block;
+            font-size: 14px;
         }
         .btn:hover {
             background: #4338CA;
         }
-        .status {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            background: #DBEAFE;
-            color: #1E40AF;
-            text-align: center;
+        .info {
+            margin-top: 16px;
+            padding: 12px;
+            background: #EEF2FF;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #4F46E5;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>⚡ 动效插件</h1>
-        <div class="status" id="status">插件已加载，等待初始化...</div>
-        <button class="btn" onclick="initPlugin()">🚀 初始化插件</button>
-        <button class="btn" onclick="getSelection()">🎯 获取选中元素</button>
-        <button class="btn" onclick="applyEffect()">✨ 应用动效</button>
+        <button class="btn" id="btn1">初始化插件</button>
+        <button class="btn" id="btn2">获取选中元素</button>
+        <button class="btn" id="btn3">应用动效</button>
+        <div class="info" id="info">插件已加载，点击按钮测试功能</div>
     </div>
 
     <script>
-        function initPlugin() {
-            document.getElementById('status').textContent = '✅ 插件初始化成功！';
-            console.log('插件已初始化');
-        }
-        
-        function getSelection() {
-            document.getElementById('status').textContent = '🎯 已获取选中元素';
-            console.log('获取选中元素');
-        }
-        
-        function applyEffect() {
-            document.getElementById('status').textContent = '✨ 动效已应用';
-            console.log('应用动效');
-        }
-        
-        // 自动初始化
-        window.onload = function() {
-            console.log('插件窗口已加载');
-        };
+        document.getElementById('btn1').addEventListener('click', function() {
+            document.getElementById('info').textContent = '✅ 插件初始化成功！';
+        });
+        document.getElementById('btn2').addEventListener('click', function() {
+            document.getElementById('info').textContent = '🎯 已获取选中元素';
+        });
+        document.getElementById('btn3').addEventListener('click', function() {
+            document.getElementById('info').textContent = '✨ 动效已应用';
+        });
+        console.log('动效插件已加载');
     </script>
 </body>
 </html>
